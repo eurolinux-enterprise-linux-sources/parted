@@ -4,7 +4,7 @@
 Summary: The GNU disk partition manipulation program
 Name:    parted
 Version: 2.1
-Release: 19%{?dist}
+Release: 21%{?dist}
 License: GPLv3+
 Group:   Applications/System
 URL:     http://www.gnu.org/software/parted
@@ -79,7 +79,17 @@ Patch32: parted-3.1-libparted-use-largest_partnum-in-dm_reread_part_tabl.patch
 Patch33: parted-3.1-tests-test-creating-20-device-mapper-partitions-8031.patch
 Patch34: parted-3.1-libparted-preserve-the-uuid-on-dm-partitions-832145.patch
 Patch35: parted-3.1-tests-Make-sure-dm-UUIDs-are-not-erased-832145.patch
-
+# DASD Support
+Patch36: parted-3.1-s390-improve-correct-DASD-support.patch
+Patch37: parted-3.1-s390-make-DIAG-driver-work-for-FBA-DASD-with-block-s.patch
+Patch38: parted-3.1-s390-avoid-warnings.patch
+Patch39: parted-2.1-libparted-add-support-for-implicit-FBA-DASD-partitions.patch
+Patch40: parted-2.1-libparted-add-support-for-EAV-DASD-partitions.patch
+Patch41: parted-2.1-libparted-mklabel.patch
+Patch42: parted-2.1-libparted-mklabel_edev.patch
+Patch43: parted-2.1-libparted-avoid-dasd-as-default-file-image-type.patch
+Patch44: parted-2.4-libparted-remove-limits-on-loop-labels.patch
+Patch45: parted-2.1-remove-last-dm-partition-851705.patch
 
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: e2fsprogs-devel
@@ -92,6 +102,7 @@ BuildRequires: libselinux-devel
 BuildRequires: libuuid-devel
 BuildRequires: libblkid-devel >= 2.17
 BuildRequires: autoconf automake
+BuildRequires: gperf
 
 Requires(post): /sbin/ldconfig
 Requires(post): /sbin/install-info
@@ -155,6 +166,16 @@ Parted library, you need to install this package.
 %patch33 -p1
 %patch34 -p1
 %patch35 -p1
+%patch36 -p1
+%patch37 -p1
+%patch38 -p1
+%patch39 -p1
+%patch40 -p1
+%patch41 -p1
+%patch42 -p1
+%patch43 -p1
+%patch44 -p1
+%patch45 -p1
 iconv -f ISO-8859-1 -t UTF8 AUTHORS > tmp; touch -r AUTHORS tmp; mv tmp AUTHORS
 
 
@@ -232,6 +253,16 @@ fi
 
 
 %changelog
+* Fri Aug 02 2013 Brian C. Lane <bcl@redhat.com> 2.1-21
+- Raise size limit on loop devices
+  Resolves: #869743
+- Remove dm device when last partition is removed
+  Resolves: #851705
+
+* Wed Jul 24 2013 Brian C. Lane <bcl@redhat.com> 2.1-20
+- libparted: IBM Patches for FBA and EAV DASD support
+  Resolves: #631928
+
 * Fri Oct 05 2012 Brian C. Lane <bcl@redhat.com> 2.1-19
 - libparted: HFS/HFS+ probe: don't let a corrupt FS evoke failed assertion
   Resolves: #797979
