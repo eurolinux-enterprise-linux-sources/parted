@@ -4,7 +4,7 @@
 Summary: The GNU disk partition manipulation program
 Name:    parted
 Version: 2.1
-Release: 18%{?dist}
+Release: 19%{?dist}
 License: GPLv3+
 Group:   Applications/System
 URL:     http://www.gnu.org/software/parted
@@ -73,6 +73,12 @@ Patch27: parted-3.0-libparted-copy-flags-when-duplicating-GPT-partitions.patch
 Patch28: parted-3.0-tests-add-new-test-to-check-ped_disk_duplicate.patch
 # Use dm_udev_wait for devicemapper operations
 Patch29: parted-2.1-libparted-use-dm_udev_wait-698121.patch
+Patch30: parted-3.1-libparted-HFS-HFS-probe-don-t-let-a-corrupt-FS-evoke.patch
+Patch31: parted-3.1-tests-exercise-and-document-the-HFS-probe-bug-fix-79.patch
+Patch32: parted-3.1-libparted-use-largest_partnum-in-dm_reread_part_tabl.patch
+Patch33: parted-3.1-tests-test-creating-20-device-mapper-partitions-8031.patch
+Patch34: parted-3.1-libparted-preserve-the-uuid-on-dm-partitions-832145.patch
+Patch35: parted-3.1-tests-Make-sure-dm-UUIDs-are-not-erased-832145.patch
 
 
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -143,6 +149,12 @@ Parted library, you need to install this package.
 %patch27 -p1
 %patch28 -p1
 %patch29 -p1
+%patch30 -p1
+%patch31 -p1
+%patch32 -p1
+%patch33 -p1
+%patch34 -p1
+%patch35 -p1
 iconv -f ISO-8859-1 -t UTF8 AUTHORS > tmp; touch -r AUTHORS tmp; mv tmp AUTHORS
 
 
@@ -220,6 +232,20 @@ fi
 
 
 %changelog
+* Fri Oct 05 2012 Brian C. Lane <bcl@redhat.com> 2.1-19
+- libparted: HFS/HFS+ probe: don't let a corrupt FS evoke failed assertion
+  Resolves: #797979
+- tests: exercise and document the HFS-probe bug fix
+  Resolves: #797979
+- libparted: use largest_partnum in dm_reread_part_table
+  Resolves: #803108
+- tests: test creating 20 device-mapper partitions
+  Resolves: #803108
+- libparted: preserve the uuid on dm partitions
+  Resolves: #832145
+- tests: Make sure dm UUIDs are not erased
+  Resolves: #832145
+
 * Mon Jan 30 2012 Brian C. Lane <bcl@redhat.com> 2.1-18
 - libparted: copy flags when duplicating GPT partitions
 - test for GPT partition duplicate
