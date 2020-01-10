@@ -4,7 +4,7 @@
 Summary: The GNU disk partition manipulation program
 Name:    parted
 Version: 2.1
-Release: 21%{?dist}
+Release: 25%{?dist}
 License: GPLv3+
 Group:   Applications/System
 URL:     http://www.gnu.org/software/parted
@@ -90,6 +90,18 @@ Patch42: parted-2.1-libparted-mklabel_edev.patch
 Patch43: parted-2.1-libparted-avoid-dasd-as-default-file-image-type.patch
 Patch44: parted-2.4-libparted-remove-limits-on-loop-labels.patch
 Patch45: parted-2.1-remove-last-dm-partition-851705.patch
+# PReP GUID support
+Patch46: parted-2.1-ppc-prepboot-support-gpt.patch
+# Fix detection of busy mpath partitions rhbz#1018075
+Patch47: parted-2.4-linux-also-detect-in-use-dmraid-and-scsi-Nth-N-16-pa.patch
+# Fix align-check in interactive mode rhbz#975478
+Patch48: parted-2.3-parted-initialize-align_type-to-default-value.patch
+Patch49: parted-2.3-parted-make-align-check-work-in-interactive-mode.patch
+Patch50: parted-2.3-parted-do_align_check-returns-always-1-in-interactiv.patch
+Patch51: parted-2.3-libparted-remove-HIGHLY-EXPERIMENTAL-warning-for-512.patch
+Patch52: parted-2.1-Slow-down-rereading-part-table-1074069.patch
+# Fix t8000-loop.sh failures on s390 rhbz#1139435
+Patch53: parted-2.1-tests-skip-loop-partitioning-tests-when-ext_range-is.patch
 
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: e2fsprogs-devel
@@ -176,6 +188,14 @@ Parted library, you need to install this package.
 %patch43 -p1
 %patch44 -p1
 %patch45 -p1
+%patch46 -p1
+%patch47 -p1
+%patch48 -p1
+%patch49 -p1
+%patch50 -p1
+%patch51 -p1
+%patch52 -p1
+%patch53 -p1
 iconv -f ISO-8859-1 -t UTF8 AUTHORS > tmp; touch -r AUTHORS tmp; mv tmp AUTHORS
 
 
@@ -253,6 +273,26 @@ fi
 
 
 %changelog
+* Tue Sep 09 2014 Brian C. Lane <bcl@redhat.com> 2.1-25
+- Skip t8000-loop test on systems without partitioned loop support
+  Resolves: rhbz#1139435
+
+* Wed May 07 2014 Brian C. Lane <bcl@redhat.com> 2.1-24
+- Slow down rereading part table
+  Resolves: rhbz#1074069
+
+* Fri May 02 2014 Brian C. Lane <bcl@redhat.com> 2.1-23
+- Drop the warning about greater than 512-byte sector sizes being experimental
+  Resolves: rhbz#929319
+
+* Thu May 01 2014 Brian C. Lane <bcl@redhat.com> 2.1-22
+- Add PreP GUID support
+  Resolves: rhbz#1054283
+- Fix busy partition detection on devices witout sequential minor device numbers
+  Resolves: rhbz#1018075
+- Fix align-check in interactive mode
+  Resolves: rhbz#975478
+
 * Fri Aug 02 2013 Brian C. Lane <bcl@redhat.com> 2.1-21
 - Raise size limit on loop devices
   Resolves: #869743
