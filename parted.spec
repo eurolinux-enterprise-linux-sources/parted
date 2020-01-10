@@ -4,7 +4,7 @@
 Summary: The GNU disk partition manipulation program
 Name:    parted
 Version: 2.1
-Release: 25%{?dist}
+Release: 29%{?dist}
 License: GPLv3+
 Group:   Applications/System
 URL:     http://www.gnu.org/software/parted
@@ -102,6 +102,21 @@ Patch51: parted-2.3-libparted-remove-HIGHLY-EXPERIMENTAL-warning-for-512.patch
 Patch52: parted-2.1-Slow-down-rereading-part-table-1074069.patch
 # Fix t8000-loop.sh failures on s390 rhbz#1139435
 Patch53: parted-2.1-tests-skip-loop-partitioning-tests-when-ext_range-is.patch
+# Fix device mapper blocksize usage
+Patch54: parted-3.2-tests-don-t-rely-on-lockfile-program.patch
+Patch55: parted-3.2-build-fix-check-other-sector_sizes.patch
+Patch56: parted-3.2-tests-Only-run-t0501-on-512b-disks-for-now.patch
+Patch57: parted-3.2-tests-Add-a-test-for-device-mapper-partition-sizes.patch
+Patch58: parted-3.2-libparted-device-mapper-uses-512b-sectors.patch
+# Fix handling of gpt backup table rhbz#1180683
+Patch59: parted-3.2-libparted-fix-gpt-end-of-disk-handling.patch
+Patch60: parted-3.2-libparted-Fix-check-for-backup-header-location.patch
+Patch61: parted-3.2-libparted-Use-common-function-to-calculate-PTE.patch
+Patch62: parted-3.2-libparted-handle-truncated-GPT-disks.patch
+Patch63: parted-3.2-Add-tests-for-gpt-backup-header-changes.patch
+Patch64: parted-3.2-libparted-Use-pri-before-freeing-it.patch
+# Make sure test environment is consistent rhbz#1199434
+Patch65: parted-2.1-Reset-environment-to-ensure-consistent-results.patch
 
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: e2fsprogs-devel
@@ -196,6 +211,18 @@ Parted library, you need to install this package.
 %patch51 -p1
 %patch52 -p1
 %patch53 -p1
+%patch54 -p1
+%patch55 -p1
+%patch56 -p1
+%patch57 -p1
+%patch58 -p1
+%patch59 -p1
+%patch60 -p1
+%patch61 -p1
+%patch62 -p1
+%patch63 -p1
+%patch64 -p1
+%patch65 -p1
 iconv -f ISO-8859-1 -t UTF8 AUTHORS > tmp; touch -r AUTHORS tmp; mv tmp AUTHORS
 
 
@@ -273,6 +300,28 @@ fi
 
 
 %changelog
+* Mon Mar 09 2015 Brian C. Lane <bcl@redhat.com> 2.1-29
+- Reset the environment for consistent test results
+  Resolves: rhbz#1199434
+
+* Wed Feb 25 2015 Brian C. Lane <bcl@redhat.com> 2.1-28
+- libparted: Use pri before freeing it
+  Related: rhbz#1180683
+
+* Fri Feb 20 2015 Brian C. Lane <bcl@redhat.com> 2.1-27
+- libparted: fix gpt end of disk handling
+  Resolves: rhbz#1180683
+- tests: Add tests for gpt end of disk handling
+  Related: rhbz#1180683
+
+* Thu Feb 19 2015 Brian C. Lane <bcl@redhat.com> 2.1-26
+- libparted: device mapper uses 512b sectors
+  Resolves: rhbz#1189328
+- tests: Add a test for device-mapper partition sizes
+  Related: rhbz#1189328
+- tests: Turn on testing of other blocksizes
+  Related: rhbz#1189328
+
 * Tue Sep 09 2014 Brian C. Lane <bcl@redhat.com> 2.1-25
 - Skip t8000-loop test on systems without partitioned loop support
   Resolves: rhbz#1139435
