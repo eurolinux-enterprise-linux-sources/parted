@@ -1,0 +1,43 @@
+From 07f2604aeeb20d187e7243007fc5ab1a0560a4b7 Mon Sep 17 00:00:00 2001
+From: "Brian C. Lane" <bcl@redhat.com>
+Date: Wed, 4 Feb 2015 16:46:07 -0800
+Subject: [PATCH 32/32] libparted: device mapper uses 512b sectors (#1188431)
+
+device mapper doesn't use the device's sector size when creating a
+table. It always uses 512b units. This causes partitions to be created
+8x smaller than expected on devices with 4906b sectors.
+
+Resolves: rhbz#1188431
+---
+ libparted/arch/linux.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/libparted/arch/linux.c b/libparted/arch/linux.c
+index 788cdc3..1d11f58 100644
+--- a/libparted/arch/linux.c
++++ b/libparted/arch/linux.c
+@@ -2849,8 +2849,10 @@ _dm_add_partition (PedDisk* disk, PedPartition* part)
+         dm_task_destroy (task);
+         task = NULL;
+ 
++        /* device-mapper uses 512b units, not the device's sector size */
+         if ( ! (params = zasprintf ("%d:%d %lld", arch_specific->major,
+-                                    arch_specific->minor, part->geom.start)))
++                                    arch_specific->minor,
++                                    part->geom.start * (disk->dev->sector_size / PED_SECTOR_SIZE_DEFAULT))))
+                 goto err;
+ 
+         task = dm_task_create (DM_DEVICE_CREATE);
+@@ -2860,7 +2862,8 @@ _dm_add_partition (PedDisk* disk, PedPartition* part)
+         dm_task_set_name (task, vol_name);
+         if (vol_uuid)
+                 dm_task_set_uuid (task, vol_uuid);
+-        dm_task_add_target (task, 0, part->geom.length,
++        /* device-mapper uses 512b units, not the device's sector size */
++        dm_task_add_target (task, 0, part->geom.length * (disk->dev->sector_size / PED_SECTOR_SIZE_DEFAULT),
+                 "linear", params);
+         if (!dm_task_set_cookie(task, &cookie, 0))
+             goto err;
+-- 
+2.1.0
+

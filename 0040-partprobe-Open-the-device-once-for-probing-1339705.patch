@@ -1,0 +1,45 @@
+From c34f2e31d804d70332b8be9760ea3f285d480070 Mon Sep 17 00:00:00 2001
+From: "Brian C. Lane" <bcl@redhat.com>
+Date: Wed, 25 May 2016 09:00:04 -0700
+Subject: [PATCH] partprobe: Open the device once for probing (#1339705)
+
+Previously there were 3 open/close pairs for the device, which may
+result in triggering extra udev actions. Instead, open it once at the
+start of process_dev and close it at the end.
+
+Resolves: rhbz#1339705
+---
+ partprobe/partprobe.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/partprobe/partprobe.c b/partprobe/partprobe.c
+index 8bccc4f..c5260c6 100644
+--- a/partprobe/partprobe.c
++++ b/partprobe/partprobe.c
+@@ -108,6 +108,9 @@ process_dev (PedDevice* dev)
+ 	PedDiskType*	disk_type;
+ 	PedDisk*	disk;
+ 
++	if (!ped_device_open (dev))
++		return 0;
++
+ 	disk_type = ped_disk_probe (dev);
+ 	if (!disk_type || !strcmp (disk_type->name, "loop"))
+ 		return 1;
+@@ -122,11 +125,13 @@ process_dev (PedDevice* dev)
+ 	if (opt_summary)
+ 		summary (disk);
+ 	ped_disk_destroy (disk);
++	ped_device_close (dev);
+ 	return 1;
+ 
+ error_destroy_disk:
+ 	ped_disk_destroy (disk);
+ error:
++	ped_device_close (dev);
+ 	return 0;
+ }
+ 
+-- 
+2.5.5
+

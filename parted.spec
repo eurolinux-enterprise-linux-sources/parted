@@ -4,7 +4,7 @@
 Summary: The GNU disk partition manipulation program
 Name:    parted
 Version: 3.1
-Release: 20%{?dist}
+Release: 28%{?dist}
 License: GPLv3+
 Group:   Applications/System
 URL:     http://www.gnu.org/software/parted
@@ -45,6 +45,19 @@ Patch26: 0026-Update-manpage-NAME-so-whatis-will-work-948424.patch
 Patch27: 0027-GPT-add-support-for-PReP-GUID-1108196.patch
 Patch28: 0028-libparted-reread-part-table-with-0-partitions-113846.patch
 Patch29: 0029-tests-Change-minimum-size-to-256MiB.patch
+Patch30: 0030-libparted-handle-logical-partitions-starting-immedia.patch
+Patch31: 0031-tests-Add-a-test-for-device-mapper-partition-sizes-1.patch
+Patch32: 0032-libparted-device-mapper-uses-512b-sectors-1188431.patch
+Patch33: 0033-libparted-Use-read-only-when-probing-devices-on-linu.patch
+Patch34: 0034-tests-Use-wait_for_dev_to_-functions.patch
+Patch35: 0035-tests-Add-udevadm-settle-to-wait_for_-loop-1260664.patch
+Patch36: 0036-tests-Add-wait-to-t9042-1257415.patch
+Patch37: 0037-tests-Fix-t1700-failing-on-a-host-with-a-4k-xfs-file.patch
+Patch38: 0038-libparted-Remove-fdasd-geometry-code-from-alloc_meta.patch
+Patch39: 0039-docs-Add-list-of-filesystems-for-fs-type-1311596.patch
+Patch40: 0040-partprobe-Open-the-device-once-for-probing-1339705.patch
+Patch41: 0041-tests-Stop-timing-t9040-1172675.patch
+Patch42: 0042-tests-Set-optimal-blocks-to-64-for-scsi_debug-device.patch
 
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: e2fsprogs-devel
@@ -180,6 +193,48 @@ fi
 
 
 %changelog
+* Fri Aug 26 2016 Brian C. Lane <bcl@redhat.com> - 3.1-28
+- tests: Set optimal blocks to 64 for scsi_debug devices
+  Resolves: rhbz#1359682
+
+* Mon Jul 18 2016 Brian C. Lane <bcl@redhat.com> - 3.1-27
+- tests: Stop timing t9040
+  Resolves: rhbz#1172675
+
+* Thu May 26 2016 Brian C. Lane <bcl@redhat.com> - 3.1-26
+- partprobe: Open the device once for probing
+  Resolves: rhbz#1339705
+
+* Tue Apr 12 2016 Brian C. Lane <bcl@redhat.com> 3.1-25
+- docs: Add list of filesystems for fs-type
+  Resolves: rhbz#1311596
+- libparted: Remove fdasd geometry code from alloc_metadata
+  Resolves: rhbz#1244833
+
+* Tue Mar 01 2016 Brian C. Lane <bcl@redhat.com> 3.1-24
+- tests: Add udevadm settle to wait_for_ loop
+  Related: rhbz#1260664
+- tests: Add-wait-to-t9042
+  Resolves: rhbz#1257415
+- tests: Fix t1700 failing on a host with a 4k xfs file
+  Related: rhbz#1260664
+
+* Wed Aug 05 2015 Brian C. Lane <bcl@redhat.com> 3.1-23
+- libparted: Use read only when probing devices on linux
+  Resolves: rhbz#1245144
+- tests: Use wait_for_dev_to_ functions
+  Related: rhbz#1245144
+
+* Wed May 20 2015 Brian C. Lane <bcl@redhat.com> 3.1-22
+- Use 512b sector size when communicating with device-mapper
+  Resolves: rhbz#1188431
+- Add a test to make sure partitions are the correct size on device-mapper
+  Related: rhbz#1188431
+
+* Thu Apr 16 2015 Brian C. Lane <bcl@redhat.com> 3.1-21
+- Backport fix for 1 sector logical partition separation from start of extended
+  Resolves: rhbz#1212323
+
 * Tue Nov 25 2014 Brian C. Lane <bcl@redhat.com> 3.1-20
 - t1700-fs test: Change minimum size to 256MiB
   Resolves: rhbz#1167785
