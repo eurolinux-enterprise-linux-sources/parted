@@ -4,7 +4,7 @@
 Summary: The GNU disk partition manipulation program
 Name:    parted
 Version: 3.1
-Release: 28%{?dist}
+Release: 29%{?dist}
 License: GPLv3+
 Group:   Applications/System
 URL:     http://www.gnu.org/software/parted
@@ -58,6 +58,12 @@ Patch39: 0039-docs-Add-list-of-filesystems-for-fs-type-1311596.patch
 Patch40: 0040-partprobe-Open-the-device-once-for-probing-1339705.patch
 Patch41: 0041-tests-Stop-timing-t9040-1172675.patch
 Patch42: 0042-tests-Set-optimal-blocks-to-64-for-scsi_debug-device.patch
+Patch43: 0043-Add-support-for-NVMe-devices.patch
+Patch44: 0044-Document-resizepart-command.patch
+Patch45: 0045-parted-Add-stub-resize-command-for-backward-compatib.patch
+Patch46: 0046-libparted-Backport-partition-resize-code.patch
+Patch47: 0047-tests-excersise-resize-command.patch
+Patch48: 0048-parted-add-resizepart-command.patch
 
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: e2fsprogs-devel
@@ -74,6 +80,7 @@ BuildRequires: git
 BuildRequires: autoconf automake
 BuildRequires: e2fsprogs
 BuildRequires: dosfstools
+BuildRequires: bc
 
 Requires(post): /sbin/ldconfig
 Requires(post): /sbin/install-info
@@ -193,6 +200,12 @@ fi
 
 
 %changelog
+* Thu Aug 10 2017 Brian C. Lane <bcl@redhat.com> - 3.1-29
+- Add support for NVMe devices
+  Resolves: rhbz#1316239
+- Backport partition resize command
+  Resolves: rhbz#1423357
+
 * Fri Aug 26 2016 Brian C. Lane <bcl@redhat.com> - 3.1-28
 - tests: Set optimal blocks to 64 for scsi_debug devices
   Resolves: rhbz#1359682

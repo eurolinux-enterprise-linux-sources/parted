@@ -1,0 +1,62 @@
+From 575b286502bd7338bfeeafbfc5e6ae6718b269f9 Mon Sep 17 00:00:00 2001
+From: Phillip Susi <psusi@ubuntu.com>
+Date: Tue, 8 Jan 2013 19:40:35 -0500
+Subject: [PATCH 45/48] parted: Add stub resize command for backward
+ compatibility
+
+To make sure that older scripts trying to use the resize command do not
+accidentally run the new resizepart command by mistake, this undocumented
+stub command will throw an error if called.
+
+(cherry picked from commit 56bfbe21ecca0cb6466c78baed192dc2e5401676)
+
+Related: rhbz#1423357
+---
+ parted/parted.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/parted/parted.c b/parted/parted.c
+index 957789a..d4a397b 100644
+--- a/parted/parted.c
++++ b/parted/parted.c
+@@ -1478,6 +1478,16 @@ error:
+ }
+ 
+ static int
++do_resize (PedDevice **dev, PedDisk** diskp)
++{
++        ped_exception_throw (
++                PED_EXCEPTION_ERROR,
++                PED_EXCEPTION_CANCEL,
++                _("The resize command has been removed in parted 3.0"));
++        return 0;
++}
++
++static int
+ do_rm (PedDevice** dev)
+ {
+         PedDisk*                disk;
+@@ -1891,6 +1901,20 @@ NULL),
+         str_list_create (_(start_end_msg), NULL), 1));
+ 
+ command_register (commands, command_create (
++        str_list_create_unique ("resize", _("resize"), NULL),
++        do_resize,
++        NULL,
++        str_list_create (_(N_("The resize command was removed in parted 3.0\n")), NULL), 1));
++
++command_register (commands, command_create (
++        str_list_create_unique ("resizepart", _("resizepart"), NULL),
++        do_resizepart,
++        str_list_create (
++_("resizepart NUMBER END                    resize partition NUMBER"),
++NULL),
++        str_list_create (_(number_msg), _(end_msg), NULL), 1));
++
++command_register (commands, command_create (
+         str_list_create_unique ("rm", _("rm"), NULL),
+         do_rm,
+         str_list_create (
+-- 
+2.9.4
+

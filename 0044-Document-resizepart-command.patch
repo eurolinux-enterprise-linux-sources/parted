@@ -1,0 +1,65 @@
+From c051e9f7eaae007940a73be1509257bd52c569de Mon Sep 17 00:00:00 2001
+From: Phillip Susi <psusi@ubuntu.com>
+Date: Sun, 25 May 2014 14:43:39 -0400
+Subject: [PATCH 44/48] Document resizepart command
+
+(cherry picked from commit 5c793853fe5cb0718d895c3394fb909c73c6fa1e)
+
+Related: rhbz#1423357
+---
+ doc/C/parted.8  |  4 ++++
+ doc/parted.texi | 16 ++++++++++++++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/doc/C/parted.8 b/doc/C/parted.8
+index 03bb3a5..5a24c94 100644
+--- a/doc/C/parted.8
++++ b/doc/C/parted.8
+@@ -95,6 +95,10 @@ Rescue a lost partition that was located somewhere between \fIstart\fP and
+ \fIend\fP.  If a partition is found, \fBparted\fP will ask if you want to
+ create an entry for it in the partition table.
+ .TP
++.B resizepart \fIpartition\fP \fIend\fP
++Change the \fIend\fP position of \fIpartition\fP.  Note that this does not
++modify any filesystem present in the partition.
++.TP
+ .B rm \fIpartition\fP
+ Delete \fIpartition\fP.
+ .TP
+diff --git a/doc/parted.texi b/doc/parted.texi
+index f10d5e1..d498367 100644
+--- a/doc/parted.texi
++++ b/doc/parted.texi
+@@ -423,6 +423,7 @@ GNU Parted provides the following commands:
+ * print::
+ * quit::
+ * rescue::
++* resizepart::
+ * rm::
+ * select::
+ * set::
+@@ -715,6 +716,21 @@ It's back!  :)
+ 
+ @end deffn
+ 
++@node resizepart
++@subsection resizepart
++@cindex resizepart, command description
++@cindex command description, resizepart
++
++@deffn Command resizepart @var{number} @var{end}
++
++Moves the @var{end} position of partition @var{number}.  Note that this
++does not modify any filesystem present in the partition.  If you wish to
++do this, you will need to use external tools, such as @command{resize2fs}.
++
++When growing a partition you will want to grow the filesystem afterwards,
++but when shrinking, you need to shrink the filesystem before the partition.
++@end deffn
++
+ @node rm
+ @subsection rm
+ @cindex rm, command description
+-- 
+2.9.4
+
