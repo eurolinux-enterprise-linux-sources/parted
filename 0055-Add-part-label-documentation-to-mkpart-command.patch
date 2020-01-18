@@ -1,0 +1,36 @@
+From 5d2ebcc83aecad33805559f202aeb1a6f36f5ecd Mon Sep 17 00:00:00 2001
+From: Fedora Ninjas <parted-owner@fedoraproject.org>
+Date: Wed, 27 Mar 2019 09:12:19 -0700
+Subject: [PATCH] Add part-label documentation to mkpart command
+
+The documentation was not clear that the first field is a partition type
+on MBR and a label on GPT.
+
+Resolves: rhbz#1686659
+---
+ doc/C/parted.8 | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/doc/C/parted.8 b/doc/C/parted.8
+index 5a24c94..080a8cf 100644
+--- a/doc/C/parted.8
++++ b/doc/C/parted.8
+@@ -73,12 +73,13 @@ Create a new disklabel (partition table) of \fIlabel-type\fP.  \fIlabel-type\fP
+ should be one of "aix", "amiga", "bsd", "dvh", "gpt", "loop", "mac", "msdos",
+ "pc98", or "sun".
+ .TP
+-.B mkpart \fIpart-type\fP \fI[fs-type]\fP \fIstart\fP \fIend\fP
++.B mkpart \fI[part-type|part-label]\fP \fI[fs-type]\fP \fIstart\fP \fIend\fP
+ Make a \fIpart-type\fP partition for filesystem \fIfs-type\fP (if specified),
+ beginning at \fIstart\fP and ending at \fIend\fP (by default in megabytes).
+ \fIfs-type\fP can be one of "btrfs", "ext2", "ext3", "ext4", "fat16", "fat32",
+ "hfs", "hfs+", "linux-swap", "ntfs", "reiserfs", or "xfs".
+-\fIpart-type\fP should be one of "primary", "logical", or "extended".
++For MBR labeled devices \fIpart-type\fP should be one of "primary", "logical", or "extended".
++For GPT labeled devices \fIpart-label\fP is used instead, and can be any short alphanumeric string.
+ .TP
+ .B name \fIpartition\fP \fIname\fP
+ Set the name of \fIpartition\fP to \fIname\fP. This option works only on Mac,
+-- 
+2.20.1
+

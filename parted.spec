@@ -4,7 +4,7 @@
 Summary: The GNU disk partition manipulation program
 Name:    parted
 Version: 3.1
-Release: 29%{?dist}
+Release: 31%{?dist}
 License: GPLv3+
 Group:   Applications/System
 URL:     http://www.gnu.org/software/parted
@@ -64,6 +64,13 @@ Patch45: 0045-parted-Add-stub-resize-command-for-backward-compatib.patch
 Patch46: 0046-libparted-Backport-partition-resize-code.patch
 Patch47: 0047-tests-excersise-resize-command.patch
 Patch48: 0048-parted-add-resizepart-command.patch
+Patch49: 0049-partprobe-always-close-dev-when-probing-disks.patch
+Patch50: 0050-tests-Add-t4201-to-test-partprobe-with-1025-devices.patch
+Patch51: 0051-fdasd-geometry-handling-updated-from-upstream-s390-t.patch
+Patch52: 0052-dasd-enhance-device-probing.patch
+Patch53: 0053-parted-fix-build-error-on-s390.patch
+Patch54: 0054-fdasd.c-Safeguard-against-geometry-misprobing.patch
+Patch55: 0055-Add-part-label-documentation-to-mkpart-command.patch
 
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: e2fsprogs-devel
@@ -200,6 +207,22 @@ fi
 
 
 %changelog
+* Wed Mar 27 2019 Brian C. Lane <bcl@redhat.com> - 3.1-31
+- Backport patches for dasd on virtio
+  fdasd: geometry handling updated from upstream s390-tools
+  dasd: enhance device probing
+  parted: fix build error on s390
+  fdasd.c: Safeguard against geometry misprobing
+  Resolves: rhbz#1676604
+- Add part-label documentation to mkpart command
+  Resolves: rhbz#1686659
+
+* Tue Feb 26 2019 Brian C. Lane <bcl@redhat.com> - 3.1-30
+- partprobe: always close dev when probing disks
+  Resolves: rhbz#1551411
+- tests: Add t4201 to test partprobe with 1025 devices
+  Related: rhbz#1551411
+
 * Thu Aug 10 2017 Brian C. Lane <bcl@redhat.com> - 3.1-29
 - Add support for NVMe devices
   Resolves: rhbz#1316239

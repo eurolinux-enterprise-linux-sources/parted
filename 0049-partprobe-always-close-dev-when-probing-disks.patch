@@ -1,0 +1,34 @@
+From da41227259c5e301e26a9983b714e521d4599575 Mon Sep 17 00:00:00 2001
+From: "Brian C. Lane" <bcl@redhat.com>
+Date: Mon, 25 Feb 2019 16:07:39 -0800
+Subject: [PATCH 49/50] partprobe: always close dev when probing disks
+
+Resolves: rhbz#1551411
+---
+ partprobe/partprobe.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/partprobe/partprobe.c b/partprobe/partprobe.c
+index c5260c6..ccda141 100644
+--- a/partprobe/partprobe.c
++++ b/partprobe/partprobe.c
+@@ -113,7 +113,7 @@ process_dev (PedDevice* dev)
+ 
+ 	disk_type = ped_disk_probe (dev);
+ 	if (!disk_type || !strcmp (disk_type->name, "loop"))
+-		return 1;
++		goto skip_dev;
+ 
+ 	disk = ped_disk_new (dev);
+ 	if (!disk)
+@@ -125,6 +125,7 @@ process_dev (PedDevice* dev)
+ 	if (opt_summary)
+ 		summary (disk);
+ 	ped_disk_destroy (disk);
++skip_dev:
+ 	ped_device_close (dev);
+ 	return 1;
+ 
+-- 
+2.20.1
+
