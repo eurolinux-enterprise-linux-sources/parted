@@ -4,7 +4,7 @@
 Summary: The GNU disk partition manipulation program
 Name:    parted
 Version: 3.1
-Release: 20%{?dist}
+Release: 23%{?dist}
 License: GPLv3+
 Group:   Applications/System
 URL:     http://www.gnu.org/software/parted
@@ -45,6 +45,11 @@ Patch26: 0026-Update-manpage-NAME-so-whatis-will-work-948424.patch
 Patch27: 0027-GPT-add-support-for-PReP-GUID-1108196.patch
 Patch28: 0028-libparted-reread-part-table-with-0-partitions-113846.patch
 Patch29: 0029-tests-Change-minimum-size-to-256MiB.patch
+Patch30: 0030-libparted-handle-logical-partitions-starting-immedia.patch
+Patch31: 0031-tests-Add-a-test-for-device-mapper-partition-sizes-1.patch
+Patch32: 0032-libparted-device-mapper-uses-512b-sectors-1188431.patch
+Patch33: 0033-libparted-Use-read-only-when-probing-devices-on-linu.patch
+Patch34: 0034-tests-Use-wait_for_dev_to_-functions.patch
 
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: e2fsprogs-devel
@@ -180,6 +185,22 @@ fi
 
 
 %changelog
+* Wed Aug 05 2015 Brian C. Lane <bcl@redhat.com> 3.1-23
+- libparted: Use read only when probing devices on linux
+  Resolves: rhbz#1245144
+- tests: Use wait_for_dev_to_ functions
+  Related: rhbz#1245144
+
+* Wed May 20 2015 Brian C. Lane <bcl@redhat.com> 3.1-22
+- Use 512b sector size when communicating with device-mapper
+  Resolves: rhbz#1188431
+- Add a test to make sure partitions are the correct size on device-mapper
+  Related: rhbz#1188431
+
+* Thu Apr 16 2015 Brian C. Lane <bcl@redhat.com> 3.1-21
+- Backport fix for 1 sector logical partition separation from start of extended
+  Resolves: rhbz#1212323
+
 * Tue Nov 25 2014 Brian C. Lane <bcl@redhat.com> 3.1-20
 - t1700-fs test: Change minimum size to 256MiB
   Resolves: rhbz#1167785
