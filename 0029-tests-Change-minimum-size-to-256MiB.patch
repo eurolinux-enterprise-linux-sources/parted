@@ -1,0 +1,27 @@
+From c4bf408e794c3e2df85539e7d561da51a8ae2cad Mon Sep 17 00:00:00 2001
+From: "Brian C. Lane" <bcl@redhat.com>
+Date: Fri, 7 Nov 2014 11:15:55 -0800
+Subject: [PATCH] tests: Change minimum size to 256MiB
+
+btrfs on ppc64 wants 136MiB so expand the minimum temp filesystem size
+for the t1700-probe-fs test.
+---
+ tests/t1700-probe-fs.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/t1700-probe-fs.sh b/tests/t1700-probe-fs.sh
+index 575ca24..83e6be4 100755
+--- a/tests/t1700-probe-fs.sh
++++ b/tests/t1700-probe-fs.sh
+@@ -28,7 +28,7 @@ for type in ext2 ext3 ext4 btrfs xfs nilfs2; do
+       || { warn_ "$ME: no $type support"; continue; }
+ 
+   case $type in ext*) n_sectors=8000 force=-F;;
+-      *) n_sectors=$((257*1024)) force=;; esac
++      *) n_sectors=$((512*1024)) force=;; esac
+ 
+   # create an $type file system
+   if [ "$type" == "xfs" ]; then
+-- 
+1.9.3
+

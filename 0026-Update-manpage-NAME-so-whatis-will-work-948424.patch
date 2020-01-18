@@ -1,0 +1,25 @@
+From 9dfa4ab406c45abc2f7a7e5e64ce01b4ca9977ed Mon Sep 17 00:00:00 2001
+From: "Brian C. Lane" <bcl@redhat.com>
+Date: Fri, 1 Aug 2014 14:48:13 -0700
+Subject: [PATCH] Update manpage NAME so whatis will work (#948424)
+
+Resolves: rhbz#948424
+---
+ doc/C/parted.8 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/doc/C/parted.8 b/doc/C/parted.8
+index 689011c..5304375 100644
+--- a/doc/C/parted.8
++++ b/doc/C/parted.8
+@@ -1,6 +1,6 @@
+ .TH PARTED 8 "2007 March 29" parted "GNU Parted Manual"
+ .SH NAME
+-GNU Parted \- a partition manipulation program
++parted \- a partition manipulation program
+ .SH SYNOPSIS
+ .B parted
+ [options] [device [command [options...]...]]
+-- 
+1.9.3
+

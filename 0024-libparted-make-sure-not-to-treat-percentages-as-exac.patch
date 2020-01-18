@@ -1,0 +1,56 @@
+From 911bc52b2609ccb2cc3b123ce383b07c66d54048 Mon Sep 17 00:00:00 2001
+From: Phillip Susi <psusi@ubuntu.com>
+Date: Mon, 4 Nov 2013 13:10:09 -0500
+Subject: [PATCH] libparted: make sure not to treat percentages as exact
+ (#1045957)
+
+If 1% of the drive size worked out ot be an even power of
+two, it would trigger the exact placement.  Add an exception
+for the percent units.
+---
+ NEWS             | 9 +++++++++
+ libparted/unit.c | 2 +-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/NEWS b/NEWS
+index e2d01ed..80a62d6 100644
+--- a/NEWS
++++ b/NEWS
+@@ -1,5 +1,13 @@
+ GNU parted NEWS                                    -*- outline -*-
+ 
++* Noteworthy changes in release 3.1-16 (2014-01-22) [RHEL7]
++
++** Bug Fixes
++
++  If a drive was 100 times an even multiple of two, sizes specified as
++  a percentage would trigger the exact placement rule and refuse to round
++  to the nearest half percent.
++
+ * Noteworthy changes in release 3.1-4 (2012-06-08) [Fedora]
+ 
+ ** Bug Fixes
+@@ -8,6 +16,7 @@ GNU parted NEWS                                    -*- outline -*-
+   libparted: Treat disks without a PMBR as msdos labeled disks
+   even if they have GPT partition tables.
+ 
++
+ * Noteworthy changes in release 3.1 (2012-03-02) [stable]
+ 
+ ** New features
+diff --git a/libparted/unit.c b/libparted/unit.c
+index 66f2b6c..265cc68 100644
+--- a/libparted/unit.c
++++ b/libparted/unit.c
+@@ -548,7 +548,7 @@ ped_unit_parse_custom (const char* str, const PedDevice* dev, PedUnit unit,
+ 	   do not use 4MiB as the range.  Rather, presume that they
+ 	   are specifying precisely the starting or ending number,
+ 	   and treat "4MiB" just as we would treat "4194304B".  */
+-	if (is_power_of_2 (unit_size))
++	if (is_power_of_2 (unit_size) && unit != PED_UNIT_PERCENT)
+ 		radius = 0;
+ 
+ 	*sector = num * unit_size / dev->sector_size;
+-- 
+1.8.4.2
+

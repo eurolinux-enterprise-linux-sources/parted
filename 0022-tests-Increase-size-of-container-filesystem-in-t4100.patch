@@ -1,0 +1,45 @@
+From 9f0da5d1112d148fc9bdbedfe3f0ee04b7a66708 Mon Sep 17 00:00:00 2001
+From: "Brian C. Lane" <bcl@redhat.com>
+Date: Wed, 22 Jan 2014 14:51:51 -0800
+Subject: [PATCH] tests: Increase size of container filesystem in t4100 tests
+ (#1036149)
+
+The xfs container filesystem was running out of space with larger sector
+size tests. Increase it from 20M to 100M.
+
+* tests/t4100-dvh-partition-limits.sh: Increase fs_file to 100M
+* tests/t4100-msdos-partition-limits.sh: Increase fs_file to 100M
+---
+ tests/t4100-dvh-partition-limits.sh   | 2 +-
+ tests/t4100-msdos-partition-limits.sh | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tests/t4100-dvh-partition-limits.sh b/tests/t4100-dvh-partition-limits.sh
+index d885502..ec6981d 100755
+--- a/tests/t4100-dvh-partition-limits.sh
++++ b/tests/t4100-dvh-partition-limits.sh
+@@ -37,7 +37,7 @@ mp=`pwd`/mount-point
+ n=4096
+ 
+ # create an XFS file system
+-dd if=/dev/zero of=$fs bs=1MB count=2 seek=20 || fail=1
++dd if=/dev/zero of=$fs bs=1MB count=2 seek=100 || fail=1
+ mkfs.xfs -f -q $fs || fail=1
+ mkdir "$mp" || fail=1
+ 
+diff --git a/tests/t4100-msdos-partition-limits.sh b/tests/t4100-msdos-partition-limits.sh
+index ec1854f..f03a85e 100755
+--- a/tests/t4100-msdos-partition-limits.sh
++++ b/tests/t4100-msdos-partition-limits.sh
+@@ -37,7 +37,7 @@ mp=`pwd`/mount-point
+ n=4096
+ 
+ # create an XFS file system
+-dd if=/dev/zero of=$fs bs=1MB count=2 seek=20 || fail=1
++dd if=/dev/zero of=$fs bs=1MB count=2 seek=100 || fail=1
+ mkfs.xfs -f -q $fs || fail=1
+ mkdir "$mp" || fail=1
+ 
+-- 
+1.8.4.2
+

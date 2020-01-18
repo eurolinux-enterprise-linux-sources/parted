@@ -1,0 +1,35 @@
+From 7ed256294ba287c807eca7bcc915a42f0030e5f9 Mon Sep 17 00:00:00 2001
+From: "Brian C. Lane" <bcl@redhat.com>
+Date: Wed, 22 Jan 2014 11:57:56 -0800
+Subject: [PATCH] tests: Remove rmmod loop from t8001 (#1040504)
+
+There is no reason to remove and reload the loop module, which may be in
+use by other things on the system the test is running on.
+
+ * tests/t8001-loop-blkpg.sh: Drop loop remove/load code.
+---
+ tests/t8001-loop-blkpg.sh | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/tests/t8001-loop-blkpg.sh b/tests/t8001-loop-blkpg.sh
+index deef18b..abffd4e 100755
+--- a/tests/t8001-loop-blkpg.sh
++++ b/tests/t8001-loop-blkpg.sh
+@@ -27,14 +27,6 @@ cleanup_fn_()
+     && { udevadm settle --timeout=3; losetup -d "$loopdev"; }
+ }
+ 
+-# If the loop module is loaded, unload it first
+-if lsmod | grep '^loop[[:space:]]'; then
+-    rmmod loop || fail=1
+-fi
+-
+-# Insert loop module with max_part > 1
+-modprobe loop max_part=7 || fail=1
+-
+ # Create backing file
+ dd if=/dev/zero of=backing_file bs=1M count=4 >/dev/null 2>&1 || fail=1
+ 
+-- 
+1.8.4.2
+

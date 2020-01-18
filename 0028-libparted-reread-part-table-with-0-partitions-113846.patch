@@ -1,0 +1,31 @@
+From 22f857bb8f57438ec6f34876e1933df01b448044 Mon Sep 17 00:00:00 2001
+From: Fedora Ninjas <parted-owner@fedoraproject.org>
+Date: Wed, 24 Sep 2014 15:59:47 -0700
+Subject: [PATCH] libparted: reread part table with 0 partitions (#1138465)
+
+After removing the last partition it still needs to be able to rescan
+the partition table, otherwise device-mapper (and in this case mpath) is
+never told that the last partition was removed.
+
+Resolves: rhbz#1138465
+---
+ libparted/arch/linux.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/libparted/arch/linux.c b/libparted/arch/linux.c
+index 4af0d5c..4daa881 100644
+--- a/libparted/arch/linux.c
++++ b/libparted/arch/linux.c
+@@ -2878,9 +2878,6 @@ static int
+ _dm_reread_part_table (PedDisk* disk)
+ {
+         int largest_partnum = ped_disk_get_last_partition_num (disk);
+-        if (largest_partnum <= 0)
+-          return 1;
+-
+         int     rc = 1;
+         int     i;
+ 
+-- 
+1.9.3
+
